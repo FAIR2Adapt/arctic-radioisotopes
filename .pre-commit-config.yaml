@@ -1,0 +1,17 @@
+repos:
+# configure shared hooks here
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff-lint
+        stages: [pre-commit]
+        language: system
+        entry: poetry run ruff check
+        types: [python, jupyter]
+      
+      - id: ruff
+        name: ruff-format
+        stages: [pre-commit]
+        language: system
+        entry: poetry run ruff format
+        types: [python, jupyter]
