@@ -2,20 +2,20 @@ import numpy as np
 import xarray as xr
 
 
-def load_grid_vertex(grid_file: str, grid_type: str = 'p'):
+def load_grid_vertex(grid_file: str, grid_type: str = "p"):
     """
     Load vertex data of BLOM ocean grid.
-    
+
     :param grid_file: Path to the grid file.
     :param grid_type: Grid type (e.g., 'p').
 
     :return: Tuple of latitude, longitude, and extended vertices (clat, clon).
     """
     with xr.open_dataset(grid_file) as grid:
-        lat = grid[grid_type + 'lat'].data
-        lon = grid[grid_type + 'lon'].data
-        clat = grid[grid_type + 'clat'].data
-        clon = grid[grid_type + 'clon'].data
+        lat = grid[grid_type + "lat"].data
+        lon = grid[grid_type + "lon"].data
+        clat = grid[grid_type + "clat"].data
+        clon = grid[grid_type + "clon"].data
 
     dims = [x + 1 for x in list(lat.shape)]
     clat_new = np.zeros(dims)
@@ -50,7 +50,7 @@ def center_longitude(ds: object, center: int = 0):
 
     if center == 0:
         centered = (ds.longitude + 180) % 360 - 180
-    else: # center == 180
+    else:  # center == 180
         centered = (ds.longitude - 180) % 360 + 180
-    
+
     return ds.assign_coords(longitude=centered)
