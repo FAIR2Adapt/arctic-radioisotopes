@@ -1,21 +1,26 @@
 import numpy as np
 import xarray as xr
-import xdggs  # Discrete global grid systems in x-array
-from xarray_healpy import HealpyGridInfo, HealpyRegridder
+from pathlib import Path
+from typing import Literal
+
 # Development versions of xdggs and xarray_healpy can be installed with:
 # pip install git+https://github.com/IAOCEA/xarray-healpy.git git+https://github.com/xarray-contrib/xdggs.git
+import xdggs  # Discrete global grid systems in x-array
+from xarray_healpy import HealpyGridInfo, HealpyRegridder
 
 
-def load_grid_vertex(grid_file: str, grid_type: str = "p"):
+def load_grid_vertex(
+    grid_file_path: Path, grid_type: str = "p"
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """
     Load vertex data of BLOM ocean grid.
 
-    :param grid_file: Path to the grid file.
+    :param grid_file_path: Path to the grid file.
     :param grid_type: Grid type (e.g., 'p').
 
     :return: Tuple of latitude, longitude, and extended vertices (clat, clon).
     """
-    with xr.open_dataset(grid_file) as grid:
+    with xr.open_dataset(grid_file_path) as grid:
         lat = grid[grid_type + "lat"].data
         lon = grid[grid_type + "lon"].data
         clat = grid[grid_type + "clat"].data
@@ -36,11 +41,11 @@ def load_grid_vertex(grid_file: str, grid_type: str = "p"):
     return lat, lon, clat_new, clon_new
 
 
-def standardize_variable_names(ds: xr.DataArray):
+def standardize_variable_names(ds: xr.Dataset) -> xr.Dataset:
     """
     Standardize the names of longitude and latitude
 
-    :param ds: xarray data
+    :param ds: xarray Dataset
 
     :return: Data with standardized names for longitude and latitude
     """
@@ -57,12 +62,12 @@ def standardize_variable_names(ds: xr.DataArray):
     return ds
 
 
-def center_longitude(ds: object, center: int = 0):
+def center_longitude(ds: xr.Dataset, center: Literal[0, 180] = 0) -> xr.Dataset:
     """
     Shift longitude coordinates of a dataset to either [-180, 180] or [0, 360] range.
 
-    :param ds: Dataset with a 'longitude' coordinate.
-    :param center: If True, shift to [-180, 180]; otherwise, to [0, 360].
+    :param ds: xarray Dataset with a 'longitude' coordinate.
+    :param center: Must be either 0 or 180. If 0, shift to [-180, 180]; if 180, shift to [0, 360].
 
     :return: Dataset with updated longitude coordinates.
     """
@@ -70,33 +75,37 @@ def center_longitude(ds: object, center: int = 0):
     if not hasattr(ds, "longitude"):
         raise ValueError("Dataset must have a 'longitude' coordinate.")
 
-    if center not in (0, 180):
-        raise ValueError("center must be 0 (for [-180, 180]) or 180 (for [0, 360]).")
-
     if center == 0:
         centered = (ds.longitude + 180) % 360 - 180
-    else:  # center == 180
+    elif center == 180:
         centered = (ds.longitude - 180) % 360 + 180
+    else:
+        raise ValueError("center must be 0 (for [-180, 180]) or 180 (for [0, 360]).")
 
     return ds.assign_coords(longitude=centered)
 
 
 def regrid_to_dggs(
-    dr: xr.DataArray,
+    dr: xr.Dataset,
     nside: int,
     min_vertices: int,
-    method: int = "bilinear",
-    mask: xr.DataArray = None,
-):
+    method: str = "bilinear",
+    mask: xr.Dataset = None,
+) -> xr.Dataset:
     """
-    Regrid data from PlateCarree to Healpy DGGS
+    Regrid data from PlateCarree to Healpix Discrete Global Grid System (DGGS) using Healpy.
+    PlateCarree: https://scitools.org.uk/cartopy/docs/latest/reference/projections.html#platecarree
+    Healpix: https://healpix.sourceforge.io/
+    Discrete Global Grid System: https://en.wikipedia.org/wiki/Discrete_global_grid
+    Healpy: https://healpy.readthedocs.io/en/latest/
 
-    :param dr: xarray data on a PlateCarree projection
-    :param nside: Each side of the original 12 faces in Healpix is divided into nside parts
+    :param dr: xarray Dataset on a PlateCarree projection
+    :param nside: target grid resolution: Each side of the original 12 faces in Healpix is divided into nside parts
+    :param min_vertices: Minimum number of vertices for a valid transcription for regridding. 1 is the most liberal, meaning that only one is needed
     :param method: Regridding method, defaults to bilinear
     :param mask: Mask showing where data is
 
-    :return: Data regridded to Healpy DGGS
+    :return: xarray Dataset with data regridded to Healpy DGGS
     """
 
     healpy_grid_level = int(np.log2(nside))  # Healpix level
