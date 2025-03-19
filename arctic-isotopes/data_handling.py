@@ -8,9 +8,11 @@ from typing import Literal
 import xdggs  # Discrete global grid systems in x-array
 from xarray_healpy import HealpyGridInfo, HealpyRegridder
 
+GRID_TYPE = Literal["p", "u", "v", "q"]
+
 
 def load_grid_vertex(
-    grid_file_path: Path, grid_type: str = "p"
+    grid_file_path: Path, grid_type: GRID_TYPE = "p"
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """
     Load vertex data of BLOM ocean grid.
