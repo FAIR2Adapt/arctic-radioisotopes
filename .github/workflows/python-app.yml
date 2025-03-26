@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest pytest-cov numpy xarray zarr typing pathlib s3fs h5netcdf
+        pip install flake8 pytest pytest-cov numpy xarray zarr typing pathlib s3fs h5netcdf cftime
         pip install git+https://github.com/IAOCEA/xhealpixify.git git+https://github.com/xarray-contrib/xdggs.git
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
