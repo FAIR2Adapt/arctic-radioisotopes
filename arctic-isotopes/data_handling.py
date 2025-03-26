@@ -8,27 +8,46 @@ from typing import Literal
 import xdggs  # Discrete global grid systems in x-array
 from xarray_healpy import HealpyGridInfo, HealpyRegridder
 
+GRID_TYPE = Literal["p", "u", "v", "q"]
+
 
 def load_grid_vertex(
-    grid_file_path: Path, grid_type: str = "p"
+    grid_file_path: Path, grid_type: GRID_TYPE = "p"
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """
     Load vertex data of BLOM ocean grid.
 
     :param grid_file_path: Path to the grid file.
-    :param grid_type: Grid type (e.g., 'p').
+    :param grid_type: Grid type (one of ["p", "u", "v", "q"]).
 
     :return: Tuple of latitude, longitude, and extended vertices (clat, clon).
     """
     with xr.open_dataset(grid_file_path) as grid:
-        lat = grid[grid_type + "lat"].data
-        lon = grid[grid_type + "lon"].data
-        clat = grid[grid_type + "clat"].data
-        clon = grid[grid_type + "clon"].data
+        lat, lon, clat_new, clon_new = get_grid_info(grid, grid_type)
+    return lat, lon, clat_new, clon_new
+
+
+def get_grid_info(
+    grid: xr.Dataset, grid_type: GRID_TYPE = "p"
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Get grid info.
+
+    :param grid: Grid data loaded as an xarray Dataset.
+    :param grid_type: Grid type (one of ["p", "u", "v", "q"]).
+
+    :return: Tuple of latitude, longitude, and extended vertices (clat, clon).
+    """
+
+    lat = grid[grid_type + "lat"].data
+    lon = grid[grid_type + "lon"].data
+    clat = grid[grid_type + "clat"].data
+    clon = grid[grid_type + "clon"].data
 
     dims = [x + 1 for x in list(lat.shape)]
     clat_new = np.zeros(dims)
     clon_new = np.zeros(dims)
+
     clat_new[:-1, :-1] = clat[0, :, :]
     clon_new[:-1, :-1] = clon[0, :, :]
     clat_new[0:-1, -1] = clat[2, :, -1]

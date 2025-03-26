@@ -7,4 +7,4 @@ Example notebooks of regridding and reformatting.
 3. City of Hamburg
 4. Designing a FAIR National Adaptation Hub
 5. Enriching weADAPT and the Connectivity Hub
-6. FAIR EU Taxonomy
+6. FAIR Climate Risk Data for Businesses
