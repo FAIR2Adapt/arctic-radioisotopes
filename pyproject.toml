@@ -11,7 +11,7 @@ dependencies = [
     "ipywidgets>=8.1.5",
     "pathlib>=1.0.1",
     "pre-commit>=4.1.0",
-    "xarray>=2025.1.1",
+    "xarray>=2025.3.0",
     "cartopy>=0.24.0",
     "cftime>=1.6.4",
     "ipykernel>=6.29.5",
@@ -34,6 +34,7 @@ dependencies = [
     "zarr (>=3.0.4,<4.0.0)",
     "pytest (>=8.3.5,<9.0.0)",
     "jsonschema (>=4.23.0,<5.0.0)",
+    "h5netcdf (>=1.6.1,<2.0.0)",
 ]
 
 [build-system]
