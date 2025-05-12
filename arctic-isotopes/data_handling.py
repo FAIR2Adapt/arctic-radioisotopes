@@ -6,7 +6,8 @@ from typing import Literal
 # Development versions of xdggs and xarray_healpy can be installed with:
 # pip install git+https://github.com/IAOCEA/xhealpixify.git git+https://github.com/xarray-contrib/xdggs.git
 import xdggs  # Discrete global grid systems in x-array
-from xhealpixify import HealpyGridInfo, HealpyRegridder
+from xarray_healpy import HealpyGridInfo, HealpyRegridder
+#from xhealpixify import HealpyGridInfo, HealpyRegridder
 
 GRID_TYPE = Literal["p", "u", "v", "q"]
 
