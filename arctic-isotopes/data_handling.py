@@ -1,7 +1,8 @@
-import numpy as np
-import xarray as xr
 from pathlib import Path
 from typing import Literal
+
+import numpy as np
+import xarray as xr
 
 # Development versions of xdggs and xarray_healpy can be installed with:
 # pip install git+https://github.com/IAOCEA/xhealpixify.git git+https://github.com/xarray-contrib/xdggs.git

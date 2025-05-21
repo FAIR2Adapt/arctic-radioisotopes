@@ -1,6 +1,6 @@
 #!/bin/bash
 # Regrids from tripolar grid to PlateCarree (1x1 degree resolution)
-# Both bilinear and conservative remapping is done and the regridded files are saved in two different files 
+# Both bilinear and conservative remapping is done and the regridded files are saved in two different files
 
 # Check if two arguments are provided
 if [ "$#" -ne 2 ]; then
