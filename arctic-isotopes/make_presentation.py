@@ -30,6 +30,13 @@ from pptx import Presentation
 TEMPLATE = Path(os.environ.get("F2A_TEMPLATE", "FAIR2Adapt_Presentation_Template.pptx"))
 FIGURES = Path("figures")
 FIGMA_URL = "https://www.figma.com/board/helaXmDzUyiAgpnok82DOE/CS1"
+# RiOMAR case study, where the chart and area selection already work -- useful as a
+# live demonstration that the gap is in the projection combination, not the tool.
+RIOMAR_DEMO = (
+    "https://f2a.plan4all.eu/#https://w3id.org/ro-id/"
+    "9c8ee58c-28f8-42ad-9ba8-0daf91935d31::varname=dissolved_oxygen"
+    "::dimIndices_time_counter=0::dimIndices_s_rho=0"
+)
 
 COVER, TEXT, TEXT_IMAGE, IMAGE, DIVIDER, BACK = 0, 1, 2, 3, 5, 7
 
@@ -363,8 +370,21 @@ def build(author: str, meeting: str, out: Path) -> None:
         "This is what US2 would give you",
         FIGURES / "arctic_timeseries.png",
         [
-            "We can produce this from the data today — but not yet "
-            "interactively, and not inside the Arctic view."
+            "Produced from the data today — but not yet interactively, "
+            "and not inside the Arctic view."
+        ],
+    )
+
+    add(
+        prs,
+        TEXT,
+        "US2 in the tool — the RiOMAR case study",
+        [
+            "The dashboard can already do this. Here it is working on RiOMAR data:",
+            (RIOMAR_DEMO, 1),
+            "Same tool, same dashboard, charts and area selection working.",
+            "What is missing for us is the combination — chart and Arctic projection together.",
+            "So this is a customisation question, not a limitation of the data.",
         ],
     )
 

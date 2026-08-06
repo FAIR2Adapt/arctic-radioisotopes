@@ -57,6 +57,20 @@ Consistent with reduced authorised discharges.
 
 2018-12: <https://f2a.plan4all.eu/#https://w3id.org/ro-id/b54df87a-515d-4e50-b212-48d4e4514cc9::token=$F2A_TOKEN::varname=U236SF::dimIndices_time=107::dimIndices_sigma=36::projection=nearside_perspective::projectionCenterLat=90::projectionCenterLon=0>
 
+## 5b. US2 — showing it works, on RiOMAR
+
+The chart and area selection are blocked for us only because they need the HEALPix layout,
+which the dashboard cannot combine with `nearside_perspective`. The tool itself is fine —
+demonstrate that on the RiOMAR case study, where both work:
+
+<https://f2a.plan4all.eu/#https://w3id.org/ro-id/9c8ee58c-28f8-42ad-9ba8-0daf91935d31::varname=dissolved_oxygen::dimIndices_time_counter=0::dimIndices_s_rho=0>
+
+Point to make: same dashboard, charts working. What is missing for Case Study 1 is the
+*combination* of chart and Arctic projection — a customisation question, not a data one.
+
+Pair it with the time-series figure (`figures/arctic_timeseries.png`) as the mockup of what
+US2 would deliver for the Arctic.
+
 ## 6. Supporting ocean state
 
 If asked what the tracers are riding on — temperature and salinity on the same layer.
