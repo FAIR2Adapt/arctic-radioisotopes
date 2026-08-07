@@ -15,6 +15,7 @@
 <https://www.wikidata.org/entity/Q283> a iop:Entity ; rdfs:label "water" ; schema:name "water" ; schema:url <https://www.wikidata.org/entity/Q283> .
 <https://www.wikidata.org/entity/Q117750525> a iop:Entity ; rdfs:label "marine environment" ; schema:name "marine environment" ; schema:url <https://www.wikidata.org/entity/Q117750525> .
 <http://vocab.nerc.ac.uk/collection/S06/current/S0600083/> a iop:Property ; rdfs:label "practical salinity" ; schema:name "practical salinity" ; schema:url <http://vocab.nerc.ac.uk/collection/S06/current/S0600083/> .
+<http://vocab.nerc.ac.uk/collection/P14/current/GVAR0653/> a iop:Property ; rdfs:label "potential temperature" ; schema:name "potential temperature" ; schema:url <http://vocab.nerc.ac.uk/collection/P14/current/GVAR0653/> .
 <http://qudt.org/vocab/quantitykind/ThermodynamicTemperature> a iop:Property ; rdfs:label "thermodynamic temperature" ; schema:name "thermodynamic temperature" ; schema:url <http://qudt.org/vocab/quantitykind/ThermodynamicTemperature> .
 <https://www.wikidata.org/entity/Q139568528> a iop:Property ; rdfs:label "number density per unit mass" ; schema:name "number density per unit mass" ; schema:url <https://www.wikidata.org/entity/Q139568528> .
 <https://www.wikidata.org/entity/Q5955496> a iop:Entity ; rdfs:label "uranium-236" ; schema:name "uranium-236" ; schema:url <https://www.wikidata.org/entity/Q5955496> .
@@ -68,7 +69,7 @@
   skos:prefLabel "Thermodynamic temperature of sea water" ;
   skos:definition "Thermodynamic temperature of sea water on isopycnal layers." ;
   dct:conformsTo <https://w3id.org/np/RAG_Uj7EW5MaoSaaGAMyP-3adOLS2OTxkIrmjCBS_lXrs/I-ADOPT-Variable-Profile> ;
-  iop:hasProperty <http://qudt.org/vocab/quantitykind/ThermodynamicTemperature> ;
+  iop:hasProperty <http://vocab.nerc.ac.uk/collection/P14/current/GVAR0653/> ;
   iop:hasObjectOfInterest <http://vocabs.lter-europe.net/EnvThes/22225> ;
   iop:hasContextObject <https://www.wikidata.org/entity/Q117750525> .
 

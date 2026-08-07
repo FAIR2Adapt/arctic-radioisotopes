@@ -171,7 +171,7 @@
       "alternateName": "Sea water potential temperature",
       "unitText": "degC",
       "url": "http://vocab.nerc.ac.uk/standard_name/sea_water_potential_temperature/",
-      "iadopt:hasProperty": { "@id": "http://vocab.nerc.ac.uk/standard_name/sea_water_potential_temperature/" },
+      "iadopt:hasProperty": { "@id": "http://vocab.nerc.ac.uk/collection/P14/current/GVAR0653/" },
       "iadopt:hasObjectOfInterest": { "@id": "https://www.wikidata.org/entity/Q184395" },
       "iadopt:hasStatisticalModifier": { "@id": "#stat-monthly-mean" }
     },
