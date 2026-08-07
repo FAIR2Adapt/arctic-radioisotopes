@@ -462,6 +462,143 @@ def workflow_diagram(out: Path) -> None:
     print(f"wrote {out}")
 
 
+def figma_guide(out: Path) -> None:
+    """One-slide guide to commenting on the Figma board, after the RiOMAR 5-minute deck.
+
+    Two tool boxes side by side, the warning that matters (people drag the board when they
+    meant to write), and the sections they will be asked to comment in.
+    """
+    from matplotlib.patches import FancyBboxPatch
+
+    TEAL, GREEN, AMBER, INK, MUTED = (
+        "#17635F",
+        "#35A08B",
+        "#B45309",
+        "#1F2937",
+        "#4B5563",
+    )
+
+    fig = plt.figure(figsize=(11.90, 4.60))
+    ax = fig.add_axes([0, 0, 1, 1])
+    ax.axis("off")
+    ax.set_xlim(0, 100)
+    ax.set_ylim(0, 100)
+
+    def box(x, y, w, h, fc, ec=None, r=2.0, lw=1.4):
+        ax.add_patch(
+            FancyBboxPatch(
+                (x, y),
+                w,
+                h,
+                boxstyle=f"round,pad=0,rounding_size={min(r, min(w, h) * 0.25)}",
+                facecolor=fc,
+                edgecolor=ec or fc,
+                linewidth=lw,
+                zorder=2,
+            )
+        )
+
+    def txt(x, y, t, size=10, c=INK, w="normal", ha="left"):
+        ax.text(
+            x, y, t, fontsize=size, color=c, fontweight=w, ha=ha, va="center", zorder=4
+        )
+
+    txt(
+        50,
+        95,
+        "Two tools — switch between them in the toolbar",
+        size=12.5,
+        c=TEAL,
+        w="bold",
+        ha="center",
+    )
+
+    box(2, 46, 46, 40, "white", ec="#D1D5DB")
+    box(2, 78, 46, 8, TEAL, r=2)
+    txt(25, 82, "MOVE AROUND   (Hand tool)", size=11, c="white", w="bold", ha="center")
+    for i, line in enumerate(
+        [
+            "Click and drag to move the board",
+            "Scroll or pinch to zoom",
+            "Tip: hold Space = hand tool",
+        ]
+    ):
+        txt(6, 71 - i * 7, "•  " + line, size=10.5, c=INK if i < 2 else MUTED)
+
+    box(52, 46, 46, 40, "white", ec="#D1D5DB")
+    box(52, 78, 46, 8, GREEN, r=2)
+    txt(
+        75,
+        82,
+        "WRITE / COMMENT   (Post-it / Text)",
+        size=11,
+        c="white",
+        w="bold",
+        ha="center",
+    )
+    for i, line in enumerate(
+        [
+            "Pick the Post-it or Text tool",
+            "Click where you want to comment",
+            "Type your comment",
+        ]
+    ):
+        txt(56, 71 - i * 7, "•  " + line, size=10.5)
+
+    box(2, 30, 96, 12, "#FEF6E7", ec="#F5C77E", r=2)
+    txt(
+        6,
+        38,
+        "⚠   Remember to switch tools between each action",
+        size=11,
+        c=AMBER,
+        w="bold",
+    )
+    txt(
+        6,
+        33.5,
+        "Hand = move the board  ·  Post-it / Text = write.  "
+        "Otherwise you will drag the board instead of writing.",
+        size=9.5,
+        c=MUTED,
+    )
+
+    txt(
+        2,
+        24,
+        "The board has two panels — add your comments in either:",
+        size=10.5,
+        c=INK,
+        w="bold",
+    )
+
+    panels = [
+        (
+            "1 — User stories",
+            ["US2 to US5, one zone each", "Add the questions you want answered"],
+        ),
+        (
+            "2 — The dashboard",
+            [
+                "Main plot · colormaps · I-ADOPT variables",
+                "nanopublications · other metadata",
+            ],
+        ),
+    ]
+    pw = 47
+    for i, (name, lines) in enumerate(panels):
+        x = 2 + i * (pw + 2)
+        box(x, 3, pw, 17, "white", ec="#D1D5DB")
+        box(x, 14, pw, 6, TEAL, r=1.5)
+        txt(x + pw / 2, 17, name, size=10, c="white", w="bold", ha="center")
+        for j, line in enumerate(lines):
+            txt(x + 2.5, 10.5 - j * 4.5, "•  " + line, size=9.5, c=MUTED)
+
+    fig.savefig(out, dpi=150, facecolor="white")
+    plt.close(fig)
+    print(f"wrote {out}")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--outdir", type=Path, default=Path("figures"))
@@ -476,6 +613,7 @@ def main() -> None:
     divider_panel(ds, args.outdir / "divider_lahague.png", "U236LH", "Blues")
     divider_panel(ds, args.outdir / "divider_sellafield.png", "U236SF", "Purples")
     workflow_diagram(args.outdir / "workflow.png")
+    figma_guide(args.outdir / "figma_guide.png")
 
 
 if __name__ == "__main__":

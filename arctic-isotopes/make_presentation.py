@@ -157,101 +157,75 @@ def add_divider(prs, title: str, subtitle: str, image: Path):
 
 
 def build(author: str, meeting: str, out: Path) -> None:
-    """Anne's two slots in the CS1 workshop: item 2 (intro, 25 min) and item 4 (demo, 30 min).
+    """A 15-minute deck, modelled on the RiOMAR 5-minute version rather than the long one.
 
-    Deliberately does NOT cover the modelling science (item 3, Yanchun) or facilitate the
-    user-story review (item 5, Barbara/Lorenzo) -- it sets those up instead.
+    Ten slides for the introduction, then three for the demo slot. Deliberately does not
+    cover the modelling science (Yanchun) or facilitate the user-story session
+    (Barbara/Lorenzo) -- it sets those up.
     """
     prs = Presentation(str(TEMPLATE))
     drop_sample_slide(prs)
 
-    # ---------------------------------------------------------------- item 2 (25 min)
-    cover = add(prs, COVER, "FAIR2Adapt Case Study 1 Workshop")
+    # 1 -- cover
+    cover = add(prs, COVER, "FAIR2Adapt — Arctic radioisotopes")
     for ph in cover.placeholders:
         if ph.placeholder_format.idx == 1:
-            ph.text = f"{meeting}\n{author}"
+            ph.text = f"Case Study 1 workshop · {meeting}\n{author}"
 
-    add(
-        prs,
-        TEXT,
-        "Why we are here",
-        [
-            "Objective: gather your feedback on the first visualisation prototype, and "
-            "validate user stories US2-US5.",
-            "We want to identify the questions that turn NorESM radioactivity simulations "
-            "into decision-ready information.",
-            "Those questions have a name: competency questions.",
-        ],
-    )
-
-    add(
-        prs,
-        TEXT,
-        "Agenda",
-        [
-            "Welcome — Torill (5 min)",
-            "FAIR2Adapt and this workshop — Anne (25 min)",
-            "Modelling radioactivity in the Arctic — Yanchun (20 min)",
-            "Visualisation prototype: demo and testing — Anne (30 min)",
-            "Break (15 min)",
-            "User stories and competency questions — Barbara & Lorenzo (40 min)",
-            "General discussion (20 min), closing remarks",
-        ],
-    )
-
+    # 2 -- the project and its objectives
     add_text_image(
         prs,
-        "FAIR2Adapt — FAIR to Adapt to Climate Change",
+        "FAIR to Adapt to Climate Change",
         FIGURES / "divider_sst.png",
         subtitle="EU project 2025-2027 · 18 partners · Grant No. 101188256",
         body=[
-            "Four objectives:",
-            ("A methodological framework for FAIRifying adaptation data", 1),
-            ("Identify useful data and improve its interoperability in EOSC", 1),
-            ("Engage communities to bring in local perspectives", 1),
-            ("Demonstrate the impact of FAIR data on adaptation", 1),
-            "Six case studies — Arctic radionuclides (NERSC) is Case Study 1",
+            "A FAIR and open data framework for climate adaptation",
+            "Identify useful data and improve its interoperability in EOSC",
+            "Engage communities to bring in local perspectives",
+            "Demonstrate the impact of FAIR data on adaptation",
         ],
     )
 
+    # 3 -- the six case studies
     add(
         prs,
         TEXT,
-        "Where we are, and what comes next",
+        "Our approach, applied to six case studies",
         [
-            "We are a little past mid-term of the three-year project.",
-            "Done for Case Study 1: the data is FAIR, published, and readable by the dashboard.",
-            "Next: automate the creation of FAIR Digital Objects — a data pipeline, "
-            "so this is not hand-built each time",
-            "Next: develop the dashboard beyond the prototype",
-            "Both depend on what you tell us today. We do not want to automate the wrong thing.",
+            "Arctic radionuclides (NERSC)  ←  this one",
+            "RiOMar, Bay of Biscay (IFREMER)",
+            "City of Hamburg (UHAM)",
+            "A national FAIR adaptation hub (FC.ID)",
+            "Enriching weADAPT and the Connectivity Hub (SEI)",
+            "FAIR climate risk for business (adelphi)",
+            "https://fair2adapt-eosc.eu/",
         ],
     )
 
-    add_divider(
-        prs,
-        "Case Study 1",
-        "From model output to something you can use",
-        FIGURES / "divider_lahague.png",
-    )
-
+    # 4 -- what FAIR2Adapt brings here, modelled on the RiOMAR slide
     add(
         prs,
         TEXT,
-        "Where we started",
+        "What FAIR2Adapt brings to the Arctic case study",
         [
-            "Seven netCDF files of NorESM output, 6 GB, one variable each",
-            "No coordinates — nothing said where on Earth the grid points were",
-            "Five of the seven files had no title, licence or citation at all",
-            "Opening one needed specialist software and a full download",
-            "Usable by the modellers who made it. Not by anyone else.",
+            "We come to the communities, and work from your needs and practices.",
+            "We support the move to FAIR and Open Science.",
+            "With NERSC: make NorESM radioactivity simulations usable outside the modelling group.",
+            "Concretely:",
+            ("NorESM output made FAIR — findable, reusable, citable", 1),
+            ("Your needs gathered through a feedback board (Figma)", 1),
+            ("A dashboard built with you, without reinventing the wheel", 1),
         ],
     )
 
+    # 5 -- the workflow
     add_picture_slide(
-        prs, "From model output to a FAIR Digital Object", FIGURES / "workflow.png"
+        prs,
+        "Arctic radioisotopes: from data to tool, via FAIRification",
+        FIGURES / "workflow.png",
     )
 
+    # 6 -- what it makes possible
     add_picture_slide(
         prs,
         "What that makes possible",
@@ -262,13 +236,46 @@ def build(author: str, meeting: str, out: Path) -> None:
         ],
     )
 
+    # 7 -- status and next steps
     add(
         prs,
         TEXT,
-        "Competency questions",
+        "Where we are, and what comes next",
+        [
+            "A little past mid-term of the three-year project.",
+            "Case Study 1 data is FAIR, published, and readable by the dashboard.",
+            "Next: automate the creation of FAIR Digital Objects — a data pipeline",
+            "Next: develop the dashboard beyond this prototype",
+            "Both depend on what you tell us today.",
+        ],
+    )
+
+    # 8 -- the gap, honestly
+    add(
+        prs,
+        TEXT,
+        "What works, and what does not yet",
+        [
+            "US3 — plot maps of radioactive tracers: works today, Arctic-centred",
+            "US2 — time series with selected parameters: not yet in the Arctic view",
+            (
+                "The chart needs a different data layout, which the dashboard cannot yet "
+                "combine with the Arctic projection",
+                1,
+            ),
+            ("It already works on RiOMar — we can show you", 1),
+            "US4 and US5 build on those two.",
+            "A customisation question, not a data one.",
+        ],
+    )
+
+    # 9 -- competency questions
+    add(
+        prs,
+        TEXT,
+        "What we are asking you for",
         [
             "A competency question is a question the data should be able to answer.",
-            "They are how we turn 'make it useful' into something we can build and test.",
             "Examples, against the user stories:",
             (
                 "US2 — How has the Sellafield contribution in the Barents Sea changed since 2010?",
@@ -278,42 +285,20 @@ def build(author: str, meeting: str, out: Path) -> None:
                 "US3 — Where is U-236 from La Hague highest in the Arctic in a given month?",
                 1,
             ),
-            (
-                "US4 — Which source dominates contamination at the depths that matter for fisheries?",
-                1,
-            ),
-            ("US5 — Is the trend consistent enough to support a recommendation?", 1),
+            ("US4 — Which source dominates at the depths that matter to you?", 1),
+            "Which of these can you answer today? What would you want to ask and cannot?",
         ],
     )
 
-    add(
+    # 10 -- the Figma board
+    add_picture_slide(
         prs,
-        TEXT,
-        "Today we are asking you two things",
-        [
-            "Does the prototype let you answer the questions you actually have?",
-            "What can you not answer yet — and would need to?",
-            "We will capture both as competency questions against user stories US2-US5.",
-            "Nothing here is fixed. This is a prototype, and the gaps are the point.",
-        ],
+        "Giving your feedback on the Figma board",
+        FIGURES / "figma_guide.png",
+        [FIGMA_URL],
     )
 
-    add(
-        prs,
-        TEXT,
-        "The Figma board",
-        [
-            "We will collect your comments on a Figma board as we go:",
-            (FIGMA_URL, 1),
-            "Two tools, switch between them in the toolbar:",
-            ("Hand — click and drag to move around; + / - to zoom", 1),
-            ("Post-it or Text — click into a zone and type your comment", 1),
-            "Remember to switch tools between moving and writing.",
-            "Link is in the chat — no account needed.",
-        ],
-    )
-
-    # ---------------------------------------------------------------- item 4 (30 min)
+    # ---------------------------------------------------------------- demo slot (item 4)
     add_divider(
         prs,
         "The prototype",
@@ -324,112 +309,36 @@ def build(author: str, meeting: str, out: Path) -> None:
     add(
         prs,
         TEXT,
-        "What you are about to see",
-        [
-            "The FAIR2Adapt dashboard, reading the Case Study 1 data live",
-            "Seven variables: temperature, salinity, and uranium-236 from three sources",
-            ("Sellafield, La Hague, and global weapons-testing fallout", 1),
-            "Monthly, 2010-2018, on 53 density layers",
-            "Centred on the Arctic, because that is where you work",
-        ],
-    )
-
-    add(
-        prs,
-        TEXT,
         "Demonstration",
         [
-            "Sea surface temperature — orientation: the grid, the projection, the land mask",
+            "Sea surface temperature — the grid, the projection, the land mask",
             "U-236 from La Hague — the largest of the three sources",
             "U-236 from Sellafield — roughly half as much",
             "U-236 from global fallout — diffuse background, for contrast",
             "Stepping through time, 2010 to 2018",
-        ],
-    )
-
-    add(
-        prs,
-        TEXT,
-        "Against the user stories",
-        [
-            "US3 — plot maps of radioactive tracers: works today",
-            "US2 — time series with selected parameters: not yet in the Arctic view",
-            (
-                "The chart needs a different data layout, which the dashboard cannot yet "
-                "combine with the Arctic-centred projection",
-                1,
-            ),
-            "US4 — interpretation: partly, by stepping through months",
-            "US5 — recommendation report: depends on US2 and US4",
-            "This is a customisation question, not a data question — and it is scopeable.",
+            "Then: your turn — links in the chat.",
         ],
     )
 
     add_picture_slide(
         prs,
-        "This is what US2 would give you",
+        "What US2 would give you",
         FIGURES / "arctic_timeseries.png",
         [
             "Produced from the data today — but not yet interactively, "
-            "and not inside the Arctic view."
+            "and not inside the Arctic view. It works on RiOMar: " + RIOMAR_DEMO
         ],
     )
 
-    add(
-        prs,
-        TEXT,
-        "US2 in the tool — the RiOMAR case study",
-        [
-            "The dashboard can already do this. Here it is working on RiOMAR data:",
-            (RIOMAR_DEMO, 1),
-            "Same tool, same dashboard, charts and area selection working.",
-            "What is missing for us is the combination — chart and Arctic projection together.",
-            "So this is a customisation question, not a limitation of the data.",
-        ],
-    )
-
-    add(
-        prs,
-        TEXT,
-        "Now you try",
-        [
-            "Links are in the chat — open them and explore",
-            "Can you find the variable, region and period you need?",
-            "Is potential density a usable vertical coordinate for you, or do you need depth?",
-            "What did you expect to be able to do, and could not?",
-            f"Put it on the Figma board as you go — {FIGMA_URL}",
-        ],
-    )
-
-    add(
-        prs,
-        TEXT,
-        "What we would like from you",
-        [
-            "Questions you can answer with this today",
-            "Questions you would want to answer and cannot yet",
-            "Questions this data could never answer — so we look elsewhere",
-            "These become the competency questions that drive what gets built next.",
-        ],
-    )
-
-    add(
-        prs,
-        TEXT,
-        "Where everything lives",
-        [
-            "Research Object: w3id.org/ro-id/b54df87a-515d-4e50-b212-48d4e4514cc9",
-            "Pipeline code: github.com/FAIR2Adapt/arctic-radioisotopes",
-            "Licence: CC-BY 4.0",
-            "Data: Yanchun He (NERSC), NKS-B ANTHROPIC project (AFT/B(23)4)",
-            "Made FAIR under FAIR2Adapt, EU grant 101188256",
-        ],
-    )
-
+    # closing
     back = add(prs, BACK)
     for ph in back.placeholders:
         if ph.placeholder_format.idx == 1:
-            ph.text = "Thank you"
+            ph.text = (
+                "Thank you\n\n" + author + "\n"
+                "https://fair2adapt-eosc.eu\n"
+                "Research Object: w3id.org/ro-id/b54df87a-515d-4e50-b212-48d4e4514cc9"
+            )
 
     prs.save(str(out))
     print(f"wrote {out}  ({len(prs.slides)} slides)")
