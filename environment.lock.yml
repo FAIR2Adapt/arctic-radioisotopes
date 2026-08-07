@@ -211,7 +211,7 @@ dependencies:
   - libnl=3.11.0
   - libnsl=2.0.1
   - libntlm=1.8
-  - libopenblas=0.3.33
+  - libopenblas=0.3.34
   - libopengl=1.7.0
   - libopentelemetry-cpp=1.21.0
   - libopentelemetry-cpp-headers=1.21.0
