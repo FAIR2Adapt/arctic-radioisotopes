@@ -1,0 +1,66 @@
+@prefix schema: <https://schema.org/> .
+@prefix cca: <https://w3id.org/ro/terms/cca/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dpv: <https://w3id.org/dpv#> .
+@prefix geodcat: <http://data.europa.eu/930/> .
+@prefix citedcat: <https://w3id.org/citedcat-ap/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# Climate Change Adaptation RO-Crate profile entities.
+# Profile: https://fair2adapt.github.io/cca-crate-profile/
+
+<https://w3id.org/ro-id/NORESM-RO> dct:conformsTo <https://fair2adapt.github.io/cca-crate-profile/> .
+<https://fair2adapt.github.io/cca-crate-profile/> a schema:CreativeWork ; schema:name "Climate Change Adaptation RO-Crate profile" ;
+  schema:url <https://github.com/FAIR2Adapt/cca-crate-profile> .
+
+# --- Minimal Viable Product (schema:Product) ---
+<https://w3id.org/ro-id/NORESM-RO> schema:isRelatedTo <https://w3id.org/ro-id/NORESM-RO#mvp> .
+<https://w3id.org/ro-id/NORESM-RO#mvp> a schema:Product ;
+  schema:name "Traceable Arctic radioisotope transport from European reprocessing discharges" ;
+  schema:description "A cloud-optimised, FAIR ocean dataset allowing stakeholders to attribute Arctic U-236 contamination to global fallout, Sellafield or La Hague, and inspect it in an Arctic-centred projection." ;
+  schema:depth "53 isopycnal layers, potential density 27.22-37.80 kg m-3" ;
+  schema:temporalCoverage "2010-01-01/2018-12-31" ;
+  schema:spatialCoverage <https://w3id.org/ro-id/NORESM-RO#place> ;
+  cca:scenarioId "JRAOC20TRNRPv2" ;
+  geodcat:spatialResolutionAsText "BLOM tripolar grid, ~111 km at the equator, ~38 km in the Arctic" ;
+  schema:license <https://creativecommons.org/licenses/by/4.0/> ;
+  dct:provenance <https://github.com/FAIR2Adapt/arctic-radioisotopes> ;
+  schema:variableMeasured <https://w3id.org/ro-id/NORESM-RO#var-U236GF> , <https://w3id.org/ro-id/NORESM-RO#var-U236SF> , <https://w3id.org/ro-id/NORESM-RO#var-U236LH> .
+
+# --- Project ---
+<https://w3id.org/ro-id/NORESM-RO> schema:publisher <https://w3id.org/ro-id/NORESM-RO#project> .
+<https://w3id.org/ro-id/NORESM-RO#project> a schema:Project ;
+  schema:name "FAIR2Adapt" ; schema:identifier "101188256" ;
+  schema:url <https://fair2adapt.eu> ;
+  cca:expectedDeliverable "Case Study 1: FAIR Digital Objects for Arctic radioisotope transport" ;
+  cca:reusedData <https://w3id.org/ro-id/NORESM-RO#campaign> .
+
+# --- Campaign ---
+<https://w3id.org/ro-id/NORESM-RO> cca:hasCampaign <https://w3id.org/ro-id/NORESM-RO#campaign> .
+<https://w3id.org/ro-id/NORESM-RO#campaign> a cca:Campaign ;
+  schema:name "NKS-B ANTHROPIC" ; schema:identifier "AFT/B(23)4" ;
+  schema:description "Nordic nuclear safety research project under which the NorESM2 U-236 tracer simulations were produced." .
+
+# --- Place ---
+<https://w3id.org/ro-id/NORESM-RO#place> a schema:Place ;
+  schema:name "Global ocean, 80S-90N, with emphasis on the Arctic" ;
+  schema:geo <https://w3id.org/ro-id/NORESM-RO#geo> .
+<https://w3id.org/ro-id/NORESM-RO#geo> a schema:GeoShape ; schema:box "-80.115 -179.997 89.757 179.989" .
+
+# --- Dataset entity (CCA Dataset terms) ---
+<https://w3id.org/ro-id/NORESM-RO> schema:hasPart <https://fair2adapt.duckdns.org/afouilloux-noresm/JRAOC20TRNRPv2_all_2010-2018.zarr> .
+<https://fair2adapt.duckdns.org/afouilloux-noresm/JRAOC20TRNRPv2_all_2010-2018.zarr> a schema:Dataset ;
+  schema:name "JRAOC20TRNRPv2_all_2010-2018.zarr" ;
+  dct:source "simulations" ; dct:type "produced" ;
+  cca:dataNature "modeled" ; cca:stability "fixed" ;
+  cca:acquisitionFrequency "P1M" ; cca:surveyAutomation "automatic" ;
+  cca:acquisitionMethod "Numerical ocean-ice simulation (NorESM2 BLOM-CICE5) forced by JRA-55 atmospheric reanalysis, with passive U-236 tracers released from distinct sources." ;
+  cca:validationApproach "Converted fields verified bit-identical to the source netCDF; standard names validated against the CF standard name table." ;
+  dpv:hasSensitivityLevel "non-sensitive" ;
+  dct:format "application/vnd.zarr" ; dcat:byteSize "6100000000" ;
+  citedcat:dataCollector <https://w3id.org/ro-id/NORESM-RO#yanchun> ;
+  dct:conformsTo <https://cfconventions.org/cf-conventions/v1.8/cf-conventions.html> .
+
+<https://w3id.org/ro-id/NORESM-RO#yanchun> a schema:Person ; schema:name "Yanchun He" ; schema:email "yanchun.he@nersc.no" .
+<https://creativecommons.org/licenses/by/4.0/> a schema:CreativeWork ; schema:name "Creative Commons Attribution 4.0 International" .

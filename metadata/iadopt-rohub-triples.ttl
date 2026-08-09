@@ -1,0 +1,110 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix schema: <https://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+# I-ADOPT decomposition for the NorESM2 Arctic radioisotope dataset.
+# Concept URIs taken verbatim from Barbara Magagna's definitions in
+# mabablue/I-ADOPT-Variables: CCA/U236LH.ttl, CCA/SSW.ttl, Ocean/SST.ttl.
+#
+# schema:name / schema:url accompany the iop: structure because the FAIR2Adapt
+# dashboard resolves those two predicates when rendering each component.
+
+<http://vocabs.lter-europe.net/EnvThes/22225> a iop:Entity ; rdfs:label "water" ; schema:name "water" ; schema:url <http://vocabs.lter-europe.net/EnvThes/22225> .
+<https://www.wikidata.org/entity/Q283> a iop:Entity ; rdfs:label "water" ; schema:name "water" ; schema:url <https://www.wikidata.org/entity/Q283> .
+<https://www.wikidata.org/entity/Q117750525> a iop:Entity ; rdfs:label "marine environment" ; schema:name "marine environment" ; schema:url <https://www.wikidata.org/entity/Q117750525> .
+<http://vocab.nerc.ac.uk/collection/S06/current/S0600083/> a iop:Property ; rdfs:label "practical salinity" ; schema:name "practical salinity" ; schema:url <http://vocab.nerc.ac.uk/collection/S06/current/S0600083/> .
+<http://vocab.nerc.ac.uk/collection/P14/current/GVAR0653/> a iop:Property ; rdfs:label "potential temperature" ; schema:name "potential temperature" ; schema:url <http://vocab.nerc.ac.uk/collection/P14/current/GVAR0653/> .
+<http://qudt.org/vocab/quantitykind/ThermodynamicTemperature> a iop:Property ; rdfs:label "thermodynamic temperature" ; schema:name "thermodynamic temperature" ; schema:url <http://qudt.org/vocab/quantitykind/ThermodynamicTemperature> .
+<https://www.wikidata.org/entity/Q139568528> a iop:Property ; rdfs:label "number density per unit mass" ; schema:name "number density per unit mass" ; schema:url <https://www.wikidata.org/entity/Q139568528> .
+<https://www.wikidata.org/entity/Q5955496> a iop:Entity ; rdfs:label "uranium-236" ; schema:name "uranium-236" ; schema:url <https://www.wikidata.org/entity/Q5955496> .
+
+# constraint, following the pattern in SSW.ttl / SST.ttl
+<https://w3id.org/ro-id/NORESM-RO#node-c-surface> a iop:Constraint ; rdfs:label "part: surface" ; schema:name "part: surface" ; iop:constrains <http://vocabs.lter-europe.net/EnvThes/22225> .
+
+# ratio of uranium-236 atoms to unit mass of water (U236LH.ttl)
+<https://w3id.org/ro-id/NORESM-RO#node-sys-u236-water> a iop:Entity , iop:AsymmetricSystem ;
+  rdfs:label "uranium-236 per unit mass of water" ;
+  schema:name "uranium-236 per unit mass of water" ;
+  iop:hasNumerator <https://www.wikidata.org/entity/Q5955496> ; iop:hasDenominator <https://www.wikidata.org/entity/Q283> .
+
+<https://w3id.org/ro-id/NORESM-RO> schema:variableMeasured <https://w3id.org/ro-id/NORESM-RO#var-U236GF> .
+<https://w3id.org/ro-id/NORESM-RO#var-U236GF> a iop:Variable ;
+  schema:name "U236GF" ;
+  rdfs:label "Number of Uranium-236 atoms in sea water" ;
+  skos:prefLabel "Number of Uranium-236 atoms in sea water" ;
+  skos:definition "Number of Uranium-236 atoms per unit mass in sea water. Uranium-236 is a radioactive isotope of uranium with a half-life of about 23.4 million years." ;
+  dct:conformsTo <https://w3id.org/np/RAG_Uj7EW5MaoSaaGAMyP-3adOLS2OTxkIrmjCBS_lXrs/I-ADOPT-Variable-Profile> ;
+  iop:hasProperty <https://www.wikidata.org/entity/Q139568528> ;
+  iop:hasObjectOfInterest <https://w3id.org/ro-id/NORESM-RO#node-sys-u236-water> ;
+  iop:hasContextObject <https://www.wikidata.org/entity/Q117750525> .
+
+<https://w3id.org/ro-id/NORESM-RO> schema:variableMeasured <https://w3id.org/ro-id/NORESM-RO#var-U236SF> .
+<https://w3id.org/ro-id/NORESM-RO#var-U236SF> a iop:Variable ;
+  schema:name "U236SF" ;
+  rdfs:label "Number of Uranium-236 atoms in sea water" ;
+  skos:prefLabel "Number of Uranium-236 atoms in sea water" ;
+  skos:definition "Number of Uranium-236 atoms per unit mass in sea water. Uranium-236 is a radioactive isotope of uranium with a half-life of about 23.4 million years." ;
+  dct:conformsTo <https://w3id.org/np/RAG_Uj7EW5MaoSaaGAMyP-3adOLS2OTxkIrmjCBS_lXrs/I-ADOPT-Variable-Profile> ;
+  iop:hasProperty <https://www.wikidata.org/entity/Q139568528> ;
+  iop:hasObjectOfInterest <https://w3id.org/ro-id/NORESM-RO#node-sys-u236-water> ;
+  iop:hasContextObject <https://www.wikidata.org/entity/Q117750525> .
+
+<https://w3id.org/ro-id/NORESM-RO> schema:variableMeasured <https://w3id.org/ro-id/NORESM-RO#var-U236LH> .
+<https://w3id.org/ro-id/NORESM-RO#var-U236LH> a iop:Variable ;
+  schema:name "U236LH" ;
+  rdfs:label "Number of Uranium-236 atoms in sea water" ;
+  skos:prefLabel "Number of Uranium-236 atoms in sea water" ;
+  skos:definition "Number of Uranium-236 atoms per unit mass in sea water. Uranium-236 is a radioactive isotope of uranium with a half-life of about 23.4 million years." ;
+  dct:conformsTo <https://w3id.org/np/RAG_Uj7EW5MaoSaaGAMyP-3adOLS2OTxkIrmjCBS_lXrs/I-ADOPT-Variable-Profile> ;
+  iop:hasProperty <https://www.wikidata.org/entity/Q139568528> ;
+  iop:hasObjectOfInterest <https://w3id.org/ro-id/NORESM-RO#node-sys-u236-water> ;
+  iop:hasContextObject <https://www.wikidata.org/entity/Q117750525> .
+
+<https://w3id.org/ro-id/NORESM-RO> schema:variableMeasured <https://w3id.org/ro-id/NORESM-RO#var-temp> .
+<https://w3id.org/ro-id/NORESM-RO#var-temp> a iop:Variable ;
+  schema:name "temp" ;
+  rdfs:label "Thermodynamic temperature of sea water" ;
+  skos:prefLabel "Thermodynamic temperature of sea water" ;
+  skos:definition "Thermodynamic temperature of sea water on isopycnal layers." ;
+  dct:conformsTo <https://w3id.org/np/RAG_Uj7EW5MaoSaaGAMyP-3adOLS2OTxkIrmjCBS_lXrs/I-ADOPT-Variable-Profile> ;
+  iop:hasProperty <http://vocab.nerc.ac.uk/collection/P14/current/GVAR0653/> ;
+  iop:hasObjectOfInterest <http://vocabs.lter-europe.net/EnvThes/22225> ;
+  iop:hasContextObject <https://www.wikidata.org/entity/Q117750525> .
+
+<https://w3id.org/ro-id/NORESM-RO> schema:variableMeasured <https://w3id.org/ro-id/NORESM-RO#var-sst> .
+<https://w3id.org/ro-id/NORESM-RO#var-sst> a iop:Variable ;
+  schema:name "sst" ;
+  rdfs:label "Sea surface temperature" ;
+  skos:prefLabel "Sea surface temperature" ;
+  skos:definition "Thermodynamic temperature of sea water at the surface." ;
+  dct:conformsTo <https://w3id.org/np/RAG_Uj7EW5MaoSaaGAMyP-3adOLS2OTxkIrmjCBS_lXrs/I-ADOPT-Variable-Profile> ;
+  iop:hasProperty <http://qudt.org/vocab/quantitykind/ThermodynamicTemperature> ;
+  iop:hasObjectOfInterest <http://vocabs.lter-europe.net/EnvThes/22225> ;
+  iop:hasConstraint <https://w3id.org/ro-id/NORESM-RO#node-c-surface> ;
+  iop:hasContextObject <https://www.wikidata.org/entity/Q117750525> .
+
+<https://w3id.org/ro-id/NORESM-RO> schema:variableMeasured <https://w3id.org/ro-id/NORESM-RO#var-saln> .
+<https://w3id.org/ro-id/NORESM-RO#var-saln> a iop:Variable ;
+  schema:name "saln" ;
+  rdfs:label "Practical salinity of sea water" ;
+  skos:prefLabel "Practical salinity of sea water" ;
+  skos:definition "Practical salinity is defined by the quantity of dissolved ions expressed on a scale (PSS-78) based on the conductivity ratio of a seawater sample to a standard KCl solution." ;
+  dct:conformsTo <https://w3id.org/np/RAG_Uj7EW5MaoSaaGAMyP-3adOLS2OTxkIrmjCBS_lXrs/I-ADOPT-Variable-Profile> ;
+  iop:hasProperty <http://vocab.nerc.ac.uk/collection/S06/current/S0600083/> ;
+  iop:hasObjectOfInterest <http://vocabs.lter-europe.net/EnvThes/22225> ;
+  iop:hasContextObject <https://www.wikidata.org/entity/Q117750525> .
+
+<https://w3id.org/ro-id/NORESM-RO> schema:variableMeasured <https://w3id.org/ro-id/NORESM-RO#var-sss> .
+<https://w3id.org/ro-id/NORESM-RO#var-sss> a iop:Variable ;
+  schema:name "sss" ;
+  rdfs:label "Practical salinity of sea surface water" ;
+  skos:prefLabel "Practical salinity of sea surface water" ;
+  skos:definition "Practical salinity is defined by the quantity of dissolved ions expressed on a scale (PSS-78) based on the conductivity ratio of a seawater sample to a standard KCl solution." ;
+  dct:conformsTo <https://w3id.org/np/RAG_Uj7EW5MaoSaaGAMyP-3adOLS2OTxkIrmjCBS_lXrs/I-ADOPT-Variable-Profile> ;
+  iop:hasProperty <http://vocab.nerc.ac.uk/collection/S06/current/S0600083/> ;
+  iop:hasObjectOfInterest <http://vocabs.lter-europe.net/EnvThes/22225> ;
+  iop:hasConstraint <https://w3id.org/ro-id/NORESM-RO#node-c-surface> ;
+  iop:hasContextObject <https://www.wikidata.org/entity/Q117750525> .
+

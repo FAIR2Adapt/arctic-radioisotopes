@@ -1,0 +1,17 @@
+@prefix schema: <https://schema.org/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+# AIDA claims, each backed by a published nanopublication.
+# The dashboard resolver reads schema:text and renders a 'nanopub' link from
+# dct:isReferencedBy (src/lib/data/rocrateResolver.ts).
+
+<https://w3id.org/ro-id/NORESM-RO> schema:hasClaim <https://w3id.org/ro-id/NORESM-RO#claim-resolution> .
+<https://w3id.org/ro-id/NORESM-RO#claim-resolution> a schema:Claim ;
+  schema:text "The NorESM2 ocean-sea-ice model resolves the Arctic Ocean at approximately 38 km horizontal resolution, about three times finer than its resolution at the equator." ;
+  dct:isReferencedBy <https://w3id.org/sciencelive/np/RAw0BUD5csmeitqzRSTduhCqdH3qHJuiiSCaF30Cjq-ms> .
+
+<https://w3id.org/ro-id/NORESM-RO> schema:hasClaim <https://w3id.org/ro-id/NORESM-RO#claim-transport> .
+<https://w3id.org/ro-id/NORESM-RO#claim-transport> a schema:Claim ;
+  schema:text "The NorESM2 ocean-sea-ice model simulates the transport of uranium-236 released from the Sellafield and La Hague nuclear fuel reprocessing plants into the Arctic Ocean." ;
+  dct:isReferencedBy <https://w3id.org/sciencelive/np/RA9P35Z1YilmNAiwmJleRqjNmf7zkaxBDbM2C-fkT02P0> .
+

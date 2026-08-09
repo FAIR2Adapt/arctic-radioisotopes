@@ -1,0 +1,335 @@
+{
+  "@context": [
+    "https://w3id.org/ro/crate/1.1/context",
+    {
+      "cca": "https://w3id.org/ro/terms/cca/",
+      "citedcat": "https://w3id.org/citedcat-ap/",
+      "dcat": "http://www.w3.org/ns/dcat#",
+      "dct": "http://purl.org/dc/terms/",
+      "dpv": "https://w3id.org/dpv#",
+      "geodcat": "http://data.europa.eu/930/",
+      "iadopt": "https://w3id.org/iadopt/ont/",
+      "schema": "https://schema.org/"
+    }
+  ],
+  "@graph": [
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "conformsTo": [
+        { "@id": "https://w3id.org/ro/crate/1.1" },
+        { "@id": "https://fair2adapt.github.io/cca-crate-profile/" }
+      ],
+      "about": { "@id": "./" }
+    },
+    {
+      "@id": "https://fair2adapt.github.io/cca-crate-profile/",
+      "@type": "CreativeWork",
+      "name": "Climate Change Adaptation RO-Crate profile",
+      "url": "https://github.com/FAIR2Adapt/cca-crate-profile"
+    },
+
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "NorESM2 Arctic radioisotopes — ocean temperature, salinity and U-236 tracers 2010-2018",
+      "description": "Monthly mean ocean fields from NorESM2 (BLOM-CICE5) forced by JRA-55, covering 2010-2018 on 53 isopycnal (potential density) layers of the native BLOM tripolar grid. Includes surface and three-dimensional temperature and salinity, and three uranium-236 tracers that separate global fallout from the Sellafield and La Hague reprocessing discharges, enabling the Arctic contribution of each source to be traced independently. Converted to Analysis-Ready Cloud-Optimized Zarr with CF-1.8 and ACDD-1.3 metadata.",
+      "identifier": "JRAOC20TRNRPv2_2010-2018",
+      "license": { "@id": "https://creativecommons.org/licenses/by/4.0/" },
+      "publisher": { "@id": "#project-fair2adapt" },
+      "creator": [{ "@id": "#yanchun-he" }, { "@id": "#anne-fouilloux" }],
+      "citedcat:dataCollector": { "@id": "#yanchun-he" },
+      "datePublished": "2026-08-06",
+      "temporalCoverage": "2010-01-01/2018-12-31",
+      "spatialCoverage": { "@id": "#place-global-ocean" },
+      "isRelatedTo": { "@id": "#mvp-arctic-radioisotopes" },
+      "cca:hasCampaign": { "@id": "#campaign-nks-b-anthropic" },
+      "variableMeasured": [
+        { "@id": "#var-sst" },
+        { "@id": "#var-sss" },
+        { "@id": "#var-temp" },
+        { "@id": "#var-saln" },
+        { "@id": "#var-U236GF" },
+        { "@id": "#var-U236SF" },
+        { "@id": "#var-U236LH" }
+      ],
+      "hasPart": [
+        { "@id": "https://fair2adapt.duckdns.org/afouilloux-noresm/JRAOC20TRNRPv2_all_2010-2018.zarr" },
+        { "@id": "https://fair2adapt.duckdns.org/afouilloux-noresm/JRAOC20TRNRPv2_all_2010-2018_hp.zarr" }
+      ],
+      "dct:source": "simulations",
+      "dct:type": "produced",
+      "cca:dataNature": "modeled",
+      "cca:stability": "fixed",
+      "cca:acquisitionMethod": "Numerical ocean-ice simulation (NorESM2 BLOM-CICE5) forced by JRA-55 atmospheric reanalysis, with passive U-236 tracers released from distinct sources.",
+      "cca:acquisitionFrequency": "P1M",
+      "cca:surveyAutomation": "automatic",
+      "cca:validationApproach": "Converted fields verified bit-identical to the source netCDF; standard names validated against the CF standard name table v94.",
+      "cca:datasetNumber": 2,
+      "dct:conformsTo": [
+        { "@id": "https://cfconventions.org/cf-conventions/v1.8/cf-conventions.html" },
+        { "@id": "https://wiki.esipfed.org/Attribute_Convention_for_Data_Discovery_1-3" }
+      ],
+      "dpv:hasSensitivityLevel": "non-sensitive",
+      "dct:format": "application/vnd.zarr",
+      "dcat:byteSize": 21500000000,
+      "dct:provenance": { "@id": "https://github.com/FAIR2Adapt/arctic-radioisotopes" },
+      "citation": "He, Y., Hamre, T., Lin, M., Qiao, J., Nielsen, S. P., Lin, G., Samuelsen, A., Jeansson, E. (2026). NorESM2 ocean reanalysis with U-236 tracers 2010-2018. Nansen Environmental and Remote Sensing Center.",
+      "acknowledgement": "Data were generated in the NKS-B ANTHROPIC project (contract AFT/B(23)4), formatted and made FAIR under FAIR2Adapt (EU grant no. 101188256)."
+    },
+
+    {
+      "@id": "https://fair2adapt.duckdns.org/afouilloux-noresm/JRAOC20TRNRPv2_all_2010-2018.zarr",
+      "@type": "Dataset",
+      "name": "JRAOC20TRNRPv2_all_2010-2018.zarr",
+      "description": "All seven variables on the native BLOM tripolar curvilinear grid (385x360) with 2-D longitude/latitude coordinates. Chunked one rendered map per chunk (~554 KB), Zstd compressed. This is the store that supports the nearside-perspective projection in the FAIR2Adapt dashboard.",
+      "encodingFormat": "application/vnd.zarr",
+      "contentSize": 6100000000,
+      "geodcat:spatialResolutionAsText": "BLOM tripolar grid, ~111 km at the equator, ~38 km in the Arctic",
+      "conformsTo": { "@id": "https://cfconventions.org/cf-conventions/v1.8/cf-conventions.html" },
+      "schema:potentialAction": { "@id": "#view-tripolar" }
+    },
+    {
+      "@id": "https://fair2adapt.duckdns.org/afouilloux-noresm/JRAOC20TRNRPv2_all_2010-2018_hp.zarr",
+      "@type": "Dataset",
+      "name": "JRAOC20TRNRPv2_all_2010-2018_hp.zarr",
+      "description": "The same seven variables regridded to a HEALPix discrete global grid, refinement level 8 (nested indexing, WGS84, ~25 km), 265,248 cells. Level 8 was chosen so that the ~38 km Arctic resolution of the source grid is preserved. Nearest-neighbour resampling, so no values absent from the source are introduced.",
+      "encodingFormat": "application/vnd.zarr",
+      "contentSize": 15000000000,
+      "geodcat:spatialResolutionAsText": "HEALPix refinement level 8 (nside 256), ~25 km, uniform",
+      "conformsTo": { "@id": "https://cfconventions.org/cf-conventions/v1.8/cf-conventions.html" }
+    },
+    {
+      "@id": "#view-tripolar",
+      "@type": "ViewAction",
+      "name": "View in the FAIR2Adapt dashboard",
+      "target": "https://f2a.plan4all.eu/#https://fair2adapt.duckdns.org/afouilloux-noresm/JRAOC20TRNRPv2_all_2010-2018.zarr::varname=U236SF::dimIndices_time=0::dimIndices_sigma=25::projection=nearside_perspective::projectionCenterLat=90::projectionCenterLon=0"
+    },
+
+    {
+      "@id": "#mvp-arctic-radioisotopes",
+      "@type": "Product",
+      "name": "Traceable Arctic radioisotope transport from European reprocessing discharges",
+      "description": "A cloud-optimised, FAIR ocean dataset that lets stakeholders attribute Arctic U-236 contamination to specific sources — global fallout, Sellafield, or La Hague — and inspect it interactively in an Arctic-centred projection.",
+      "variableMeasured": [
+        { "@id": "#var-U236GF" },
+        { "@id": "#var-U236SF" },
+        { "@id": "#var-U236LH" }
+      ],
+      "schema:depth": "53 isopycnal layers, potential density 27.22-37.80 kg m-3",
+      "temporalCoverage": "2010-01-01/2018-12-31",
+      "spatialCoverage": { "@id": "#place-global-ocean" },
+      "cca:scenarioId": "JRAOC20TRNRPv2",
+      "geodcat:spatialResolutionAsText": "~38 km in the Arctic on the native grid; HEALPix level 8 (~25 km) in the DGGS variant",
+      "license": { "@id": "https://creativecommons.org/licenses/by/4.0/" },
+      "dct:provenance": { "@id": "https://github.com/FAIR2Adapt/arctic-radioisotopes" }
+    },
+
+    {
+      "@id": "#var-U236SF",
+      "@type": ["iadopt:Variable", "PropertyValue"],
+      "name": "U236SF",
+      "alternateName": "U-236 concentration from Sellafield discharges",
+      "unitText": "atoms kg-1",
+      "description": "Amount concentration of uranium-236 in sea water attributable to discharges from the Sellafield reprocessing site, as a passive tracer.",
+      "iadopt:hasProperty": { "@id": "https://www.wikidata.org/entity/Q672821" },
+      "iadopt:hasObjectOfInterest": { "@id": "https://www.wikidata.org/entity/Q5955496" },
+      "iadopt:hasMatrix": { "@id": "https://www.wikidata.org/entity/Q184395" },
+      "iadopt:hasConstraint": { "@id": "#constraint-sellafield" },
+      "iadopt:hasStatisticalModifier": { "@id": "#stat-monthly-mean" }
+    },
+    {
+      "@id": "#var-U236LH",
+      "@type": ["iadopt:Variable", "PropertyValue"],
+      "name": "U236LH",
+      "alternateName": "U-236 concentration from La Hague discharges",
+      "unitText": "atoms kg-1",
+      "description": "Amount concentration of uranium-236 in sea water attributable to discharges from the Orano La Hague reprocessing site, as a passive tracer.",
+      "iadopt:hasProperty": { "@id": "https://www.wikidata.org/entity/Q672821" },
+      "iadopt:hasObjectOfInterest": { "@id": "https://www.wikidata.org/entity/Q5955496" },
+      "iadopt:hasMatrix": { "@id": "https://www.wikidata.org/entity/Q184395" },
+      "iadopt:hasConstraint": { "@id": "#constraint-lahague" },
+      "iadopt:hasStatisticalModifier": { "@id": "#stat-monthly-mean" }
+    },
+    {
+      "@id": "#var-U236GF",
+      "@type": ["iadopt:Variable", "PropertyValue"],
+      "name": "U236GF",
+      "alternateName": "U-236 concentration from global fallout",
+      "unitText": "atoms kg-1",
+      "description": "Amount concentration of uranium-236 in sea water attributable to global fallout from atmospheric nuclear weapons testing, as a passive tracer.",
+      "iadopt:hasProperty": { "@id": "https://www.wikidata.org/entity/Q672821" },
+      "iadopt:hasObjectOfInterest": { "@id": "https://www.wikidata.org/entity/Q5955496" },
+      "iadopt:hasMatrix": { "@id": "https://www.wikidata.org/entity/Q184395" },
+      "iadopt:hasConstraint": { "@id": "#constraint-global-fallout" },
+      "iadopt:hasStatisticalModifier": { "@id": "#stat-monthly-mean" }
+    },
+    {
+      "@id": "#var-temp",
+      "@type": ["iadopt:Variable", "PropertyValue"],
+      "name": "temp",
+      "alternateName": "Sea water potential temperature",
+      "unitText": "degC",
+      "url": "http://vocab.nerc.ac.uk/standard_name/sea_water_potential_temperature/",
+      "iadopt:hasProperty": { "@id": "http://vocab.nerc.ac.uk/collection/P14/current/GVAR0653/" },
+      "iadopt:hasObjectOfInterest": { "@id": "https://www.wikidata.org/entity/Q184395" },
+      "iadopt:hasStatisticalModifier": { "@id": "#stat-monthly-mean" }
+    },
+    {
+      "@id": "#var-saln",
+      "@type": ["iadopt:Variable", "PropertyValue"],
+      "name": "saln",
+      "alternateName": "Sea water salinity",
+      "unitText": "g kg-1",
+      "url": "http://vocab.nerc.ac.uk/standard_name/sea_water_salinity/",
+      "iadopt:hasProperty": { "@id": "http://vocab.nerc.ac.uk/standard_name/sea_water_salinity/" },
+      "iadopt:hasObjectOfInterest": { "@id": "https://www.wikidata.org/entity/Q184395" },
+      "iadopt:hasStatisticalModifier": { "@id": "#stat-monthly-mean" }
+    },
+    {
+      "@id": "#var-sst",
+      "@type": ["iadopt:Variable", "PropertyValue"],
+      "name": "sst",
+      "alternateName": "Sea surface temperature",
+      "unitText": "degC",
+      "url": "http://vocab.nerc.ac.uk/standard_name/sea_surface_temperature/",
+      "iadopt:hasProperty": { "@id": "http://vocab.nerc.ac.uk/standard_name/sea_surface_temperature/" },
+      "iadopt:hasObjectOfInterest": { "@id": "https://www.wikidata.org/entity/Q184395" },
+      "iadopt:hasStatisticalModifier": { "@id": "#stat-monthly-mean" }
+    },
+    {
+      "@id": "#var-sss",
+      "@type": ["iadopt:Variable", "PropertyValue"],
+      "name": "sss",
+      "alternateName": "Sea surface salinity",
+      "unitText": "g kg-1",
+      "url": "http://vocab.nerc.ac.uk/standard_name/sea_surface_salinity/",
+      "iadopt:hasProperty": { "@id": "http://vocab.nerc.ac.uk/standard_name/sea_surface_salinity/" },
+      "iadopt:hasObjectOfInterest": { "@id": "https://www.wikidata.org/entity/Q184395" },
+      "iadopt:hasStatisticalModifier": { "@id": "#stat-monthly-mean" }
+    },
+
+    {
+      "@id": "#constraint-sellafield",
+      "@type": "iadopt:Constraint",
+      "name": "released from Sellafield",
+      "schema:about": { "@id": "https://www.wikidata.org/entity/Q1063567" }
+    },
+    {
+      "@id": "#constraint-lahague",
+      "@type": "iadopt:Constraint",
+      "name": "released from Orano La Hague",
+      "schema:about": { "@id": "https://www.wikidata.org/entity/Q1411438" }
+    },
+    {
+      "@id": "#constraint-global-fallout",
+      "@type": "iadopt:Constraint",
+      "name": "originating from global fallout",
+      "schema:about": { "@id": "https://www.wikidata.org/entity/Q474044" }
+    },
+    {
+      "@id": "#stat-monthly-mean",
+      "@type": "iadopt:StatisticalModifier",
+      "name": "monthly mean",
+      "description": "CF cell_methods 'time: mean' over each calendar month, with explicit time bounds."
+    },
+    { "@id": "https://www.wikidata.org/entity/Q5955496", "@type": "DefinedTerm", "name": "uranium-236" },
+    { "@id": "https://www.wikidata.org/entity/Q184395", "@type": "DefinedTerm", "name": "sea water" },
+    { "@id": "https://www.wikidata.org/entity/Q672821", "@type": "DefinedTerm", "name": "amount-of-substance concentration" },
+    { "@id": "https://www.wikidata.org/entity/Q1063567", "@type": "DefinedTerm", "name": "Sellafield" },
+    { "@id": "https://www.wikidata.org/entity/Q1411438", "@type": "DefinedTerm", "name": "Orano La Hague site" },
+    { "@id": "https://www.wikidata.org/entity/Q474044", "@type": "DefinedTerm", "name": "nuclear fallout" },
+
+    {
+      "@id": "#project-fair2adapt",
+      "@type": "Project",
+      "name": "FAIR2Adapt",
+      "identifier": "101188256",
+      "url": "https://fair2adapt.eu",
+      "funding": { "@id": "#grant-fair2adapt" },
+      "cca:expectedDeliverable": "Case Study 1: FAIR Digital Objects for Arctic radioisotope transport",
+      "cca:reusedData": { "@id": "#campaign-nks-b-anthropic" }
+    },
+    {
+      "@id": "#grant-fair2adapt",
+      "@type": "Grant",
+      "identifier": "101188256",
+      "name": "FAIR2Adapt",
+      "funder": { "@id": "https://ror.org/00k4n6c32" }
+    },
+    { "@id": "https://ror.org/00k4n6c32", "@type": "Organization", "name": "European Commission" },
+    {
+      "@id": "#campaign-nks-b-anthropic",
+      "@type": "Campaign",
+      "name": "NKS-B ANTHROPIC",
+      "identifier": "AFT/B(23)4",
+      "description": "Nordic nuclear safety research project under which the NorESM2 U-236 tracer simulations were produced.",
+      "funder": { "@id": "#nks" }
+    },
+    { "@id": "#nks", "@type": "Organization", "name": "Nordic Nuclear Safety Research (NKS)" },
+    {
+      "@id": "#nersc",
+      "@type": "Organization",
+      "name": "Nansen Environmental and Remote Sensing Center",
+      "url": "https://www.nersc.no",
+      "email": "datamanager@nersc.no"
+    },
+    { "@id": "#lifewatch", "@type": "Organization", "name": "LifeWatch ERIC", "url": "https://www.lifewatch.eu" },
+    {
+      "@id": "#yanchun-he",
+      "@type": "Person",
+      "name": "Yanchun He",
+      "email": "yanchun.he@nersc.no",
+      "affiliation": { "@id": "#nersc" },
+      "roleName": "Principal investigator; model output production"
+    },
+    {
+      "@id": "#torill-hamre",
+      "@type": "Person",
+      "name": "Torill Hamre",
+      "email": "torill.hamre@nersc.no",
+      "affiliation": { "@id": "#nersc" },
+      "roleName": "Metadata generation"
+    },
+    {
+      "@id": "#anne-fouilloux",
+      "@type": "Person",
+      "name": "Anne Fouilloux",
+      "email": "anne.fouilloux@lifewatch.eu",
+      "affiliation": { "@id": "#lifewatch" },
+      "roleName": "FAIRification, cloud-optimised conversion"
+    },
+    {
+      "@id": "#place-global-ocean",
+      "@type": "Place",
+      "name": "Global ocean, 80S-90N, with emphasis on the Arctic",
+      "geo": { "@id": "#geo-bbox" }
+    },
+    {
+      "@id": "#geo-bbox",
+      "@type": "GeoShape",
+      "box": "-80.115 -179.997 89.757 179.989"
+    },
+    {
+      "@id": "https://creativecommons.org/licenses/by/4.0/",
+      "@type": "CreativeWork",
+      "name": "Creative Commons Attribution 4.0 International"
+    },
+    {
+      "@id": "https://github.com/FAIR2Adapt/arctic-radioisotopes",
+      "@type": "SoftwareSourceCode",
+      "name": "arctic-radioisotopes — FAIRification pipeline",
+      "description": "Scripts that retrieve the source netCDF, recover the BLOM grid coordinates, and build the CF-compliant Zarr and HEALPix stores."
+    },
+    {
+      "@id": "https://cfconventions.org/cf-conventions/v1.8/cf-conventions.html",
+      "@type": "CreativeWork",
+      "name": "CF Conventions 1.8"
+    },
+    {
+      "@id": "https://wiki.esipfed.org/Attribute_Convention_for_Data_Discovery_1-3",
+      "@type": "CreativeWork",
+      "name": "Attribute Convention for Data Discovery 1.3"
+    }
+  ]
+}
