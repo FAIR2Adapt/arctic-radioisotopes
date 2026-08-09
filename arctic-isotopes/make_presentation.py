@@ -1,0 +1,371 @@
+#!/usr/bin/env python3
+"""Build the Arctic radioisotopes stakeholder deck from the FAIR2Adapt template.
+
+Uses the template's own layouts and placeholders, so branding, fonts and footers come from
+the template rather than being reconstructed. Layout indices in the supplied template:
+
+    0 Cover Page        title + subtitle
+    1 Text Page         title + body
+    2 Text + Image Page title + body + picture
+    3 Image Page 1      title + body + picture
+    5 Divider Page 1    section divider
+    7 BackPage         closing
+
+Structure mirrors the RiOMAR stakeholder deck. Content is drawn from
+`presentation-arctic-outline.md`; figures from `scripts/make_figures.py`.
+
+    pixi run python scripts/make_presentation.py --author "Anne Fouilloux"
+"""
+
+from __future__ import annotations
+
+import argparse
+import os
+from pathlib import Path
+
+from pptx import Presentation
+
+# Override with --template; the FAIR2Adapt template is not redistributable, so it is
+# not kept in the repository.
+TEMPLATE = Path(os.environ.get("F2A_TEMPLATE", "FAIR2Adapt_Presentation_Template.pptx"))
+FIGURES = Path("figures")
+FIGMA_URL = "https://www.figma.com/board/helaXmDzUyiAgpnok82DOE/CS1"
+# RiOMAR case study, where the chart and area selection already work -- useful as a
+# live demonstration that the gap is in the projection combination, not the tool.
+RIOMAR_DEMO = (
+    "https://f2a.plan4all.eu/#https://w3id.org/ro-id/"
+    "9c8ee58c-28f8-42ad-9ba8-0daf91935d31::varname=dissolved_oxygen"
+    "::dimIndices_time_counter=0::dimIndices_s_rho=0"
+)
+
+COVER, TEXT, TEXT_IMAGE, IMAGE, DIVIDER, BACK = 0, 1, 2, 3, 5, 7
+
+
+def drop_sample_slide(prs) -> None:
+    """Remove the template's sample cover slide, relationship included.
+
+    Removing the entry from sldIdLst alone leaves the slide part still related to the
+    presentation, so python-pptx serialises it twice -- producing duplicate
+    `ppt/slides/slide1.xml` entries in the zip. PowerPoint reports that as a corrupt file
+    and drops content (including embedded images) when it repairs. Dropping the relationship
+    is what actually detaches the part.
+    """
+    if len(prs.slides) != 1:
+        return
+    id_list = prs.slides._sldIdLst
+    entry = list(id_list)[0]
+    rel_id = entry.get(
+        "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id"
+    )
+    prs.part.drop_rel(rel_id)
+    id_list.remove(entry)
+
+
+def set_body(shape, lines: list) -> None:
+    """Fill a body placeholder. Items may be str, or (text, level) for sub-bullets."""
+    tf = shape.text_frame
+    tf.clear()
+    for i, item in enumerate(lines):
+        text, level = item if isinstance(item, tuple) else (item, 0)
+        para = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+        para.text = text
+        para.level = level
+
+
+def add(prs, layout_idx: int, title: str | None = None, body: list | None = None):
+    slide = prs.slides.add_slide(prs.slide_layouts[layout_idx])
+    if title is not None:
+        for ph in slide.placeholders:
+            if ph.placeholder_format.idx == 0:
+                ph.text = title
+                break
+    if body is not None:
+        for ph in slide.placeholders:
+            if ph.placeholder_format.idx == 14:
+                set_body(ph, body)
+                break
+    return slide
+
+
+def add_picture_slide(prs, title: str, image: Path, body: list | None = None):
+    """Use the picture placeholder if the layout has one, else place it manually."""
+    slide = add(prs, IMAGE, title, body)
+    for ph in list(slide.placeholders):
+        if ph.placeholder_format.type == 18 or "PICTURE" in str(
+            ph.placeholder_format.type
+        ):
+            box_l, box_t, box_w, box_h = ph.left, ph.top, ph.width, ph.height
+            pic = ph.insert_picture(str(image))
+            # insert_picture crops to FILL the placeholder, which would slice ~15% off the
+            # top and bottom of these wide figures -- taking the title and colourbar with
+            # it. Reset the crop and letterbox the image inside the box instead.
+            pic.crop_left = pic.crop_right = pic.crop_top = pic.crop_bottom = 0
+            from PIL import Image as PILImage
+
+            iw, ih = PILImage.open(image).size
+            scale = min(box_w / iw, box_h / ih)
+            pic.width, pic.height = int(iw * scale), int(ih * scale)
+            pic.left = int(box_l + (box_w - pic.width) / 2)
+            pic.top = int(box_t + (box_h - pic.height) / 2)
+            return slide
+    # Fallback: centre it under the title.
+
+    pic = slide.shapes.add_picture(str(image), 0, 0)
+    scale = min(
+        (prs.slide_width * 0.86) / pic.width, (prs.slide_height * 0.62) / pic.height
+    )
+    pic.width, pic.height = int(pic.width * scale), int(pic.height * scale)
+    pic.left = int((prs.slide_width - pic.width) / 2)
+    pic.top = int(prs.slide_height * 0.30)
+    return slide
+
+
+def add_text_image(
+    prs, title: str, image: Path, subtitle: str = "", body: list | None = None
+):
+    """Layout 2: title, one-line subtitle, body text left, image right."""
+    slide = prs.slides.add_slide(prs.slide_layouts[TEXT_IMAGE])
+    for ph in list(slide.placeholders):
+        pf = ph.placeholder_format
+        if pf.idx == 0:
+            ph.text = title
+        elif pf.idx == 14:
+            ph.text = subtitle
+        elif pf.idx == 15 and body:
+            set_body(ph, body)
+        elif pf.idx == 10:
+            ph.insert_picture(str(image))
+    return slide
+
+
+def add_divider(prs, title: str, subtitle: str, image: Path):
+    """Section divider: text left, full-bleed image right.
+
+    The divider layout's picture placeholder is the right half of the slide, so here
+    crop-to-fill is the intended behaviour (unlike the figure slides, where it would
+    slice the title off). Any placeholder left empty renders as a grey prompt box in
+    PowerPoint, so the unused content placeholder is removed.
+    """
+    slide = add(prs, DIVIDER, title, [subtitle])
+    for ph in list(slide.placeholders):
+        pf = ph.placeholder_format
+        if pf.idx == 1:
+            ph.insert_picture(str(image))
+        elif pf.idx == 15:
+            ph._element.getparent().remove(ph._element)
+    return slide
+
+
+def build(author: str, meeting: str, out: Path) -> None:
+    """A 15-minute deck, modelled on the RiOMAR 5-minute version rather than the long one.
+
+    Ten slides for the introduction, then three for the demo slot. Deliberately does not
+    cover the modelling science (Yanchun) or facilitate the user-story session
+    (Barbara/Lorenzo) -- it sets those up.
+    """
+    prs = Presentation(str(TEMPLATE))
+    drop_sample_slide(prs)
+
+    # 1 -- cover
+    cover = add(prs, COVER, "FAIR2Adapt — Arctic radioisotopes")
+    for ph in cover.placeholders:
+        if ph.placeholder_format.idx == 1:
+            ph.text = f"Case Study 1 workshop · {meeting}\n{author}"
+
+    # 2 -- the project and its objectives
+    add_text_image(
+        prs,
+        "FAIR to Adapt to Climate Change",
+        FIGURES / "divider_sst.png",
+        subtitle="EU project 2025-2027 · 18 partners · Grant No. 101188256",
+        body=[
+            "A FAIR and open data framework for climate adaptation",
+            "Identify useful data and improve its interoperability in EOSC",
+            "Engage communities to bring in local perspectives",
+            "Demonstrate the impact of FAIR data on adaptation",
+        ],
+    )
+
+    # 3 -- the six case studies
+    add(
+        prs,
+        TEXT,
+        "Our approach, applied to six case studies",
+        [
+            "Arctic radionuclides (NERSC)  ←  this one",
+            "RiOMar, Bay of Biscay (IFREMER)",
+            "City of Hamburg (UHAM)",
+            "A national FAIR adaptation hub (FC.ID)",
+            "Enriching weADAPT and the Connectivity Hub (SEI)",
+            "FAIR climate risk for business (adelphi)",
+            "https://fair2adapt-eosc.eu/",
+        ],
+    )
+
+    # 4 -- what FAIR2Adapt brings here, modelled on the RiOMAR slide
+    add(
+        prs,
+        TEXT,
+        "What FAIR2Adapt brings to the Arctic case study",
+        [
+            "We come to the communities, and work from your needs and practices.",
+            "We support the move to FAIR and Open Science.",
+            "With NERSC: make NorESM radioactivity simulations usable outside the modelling group.",
+            "Concretely:",
+            ("NorESM output made FAIR — findable, reusable, citable", 1),
+            ("Your needs gathered through a feedback board (Figma)", 1),
+            ("A dashboard built with you, without reinventing the wheel", 1),
+        ],
+    )
+
+    # 5 -- the workflow
+    add_picture_slide(
+        prs,
+        "Arctic radioisotopes: from data to tool, via FAIRification",
+        FIGURES / "workflow.png",
+    )
+
+    # 6 -- what it makes possible
+    add_picture_slide(
+        prs,
+        "What that makes possible",
+        FIGURES / "arctic_sources.png",
+        [
+            "Three sources, one ocean — separable because each was tracked "
+            "separately in the model."
+        ],
+    )
+
+    # 7 -- status and next steps
+    add(
+        prs,
+        TEXT,
+        "Where we are, and what comes next",
+        [
+            "A little past mid-term of the three-year project.",
+            "Case Study 1 data is FAIR, published, and readable by the dashboard.",
+            "Next: automate the creation of FAIR Digital Objects — a data pipeline",
+            "Next: develop the dashboard beyond this prototype",
+            "Both depend on what you tell us today.",
+        ],
+    )
+
+    # 8 -- the gap, honestly
+    add(
+        prs,
+        TEXT,
+        "What works, and what does not yet",
+        [
+            "US3 — plot maps of radioactive tracers: works today, Arctic-centred",
+            "US2 — time series with selected parameters: not yet in the Arctic view",
+            (
+                "The chart needs a different data layout, which the dashboard cannot yet "
+                "combine with the Arctic projection",
+                1,
+            ),
+            ("It already works on RiOMar — we can show you", 1),
+            "US4 and US5 build on those two.",
+            "A customisation question, not a data one.",
+        ],
+    )
+
+    # 9 -- competency questions
+    add(
+        prs,
+        TEXT,
+        "What we are asking you for",
+        [
+            "A competency question is a question the data should be able to answer.",
+            "Examples, against the user stories:",
+            (
+                "US2 — How has the Sellafield contribution in the Barents Sea changed since 2010?",
+                1,
+            ),
+            (
+                "US3 — Where is U-236 from La Hague highest in the Arctic in a given month?",
+                1,
+            ),
+            ("US4 — Which source dominates at the depths that matter to you?", 1),
+            "Which of these can you answer today? What would you want to ask and cannot?",
+        ],
+    )
+
+    # 10 -- the Figma board
+    add_picture_slide(
+        prs,
+        "Giving your feedback on the Figma board",
+        FIGURES / "figma_guide.png",
+        [FIGMA_URL],
+    )
+
+    # ---------------------------------------------------------------- demo slot (item 4)
+    add_divider(
+        prs,
+        "The prototype",
+        "Demonstration, testing, and your questions",
+        FIGURES / "divider_sellafield.png",
+    )
+
+    add(
+        prs,
+        TEXT,
+        "Demonstration",
+        [
+            "Sea surface temperature — the grid, the projection, the land mask",
+            "U-236 from La Hague — the largest of the three sources",
+            "U-236 from Sellafield — roughly half as much",
+            "U-236 from global fallout — diffuse background, for contrast",
+            "Stepping through time, 2010 to 2018",
+            "Then: your turn — links in the chat.",
+        ],
+    )
+
+    add_picture_slide(
+        prs,
+        "What US2 would give you",
+        FIGURES / "arctic_timeseries.png",
+        [
+            "Produced from the data today — but not yet interactively, "
+            "and not inside the Arctic view. It works on RiOMar: " + RIOMAR_DEMO
+        ],
+    )
+
+    # closing
+    back = add(prs, BACK)
+    for ph in back.placeholders:
+        if ph.placeholder_format.idx == 1:
+            ph.text = (
+                "Thank you\n\n" + author + "\n"
+                "https://fair2adapt-eosc.eu\n"
+                "Research Object: w3id.org/ro-id/b54df87a-515d-4e50-b212-48d4e4514cc9"
+            )
+
+    prs.save(str(out))
+    print(f"wrote {out}  ({len(prs.slides)} slides)")
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--author", default="Anne Fouilloux")
+    ap.add_argument("--meeting", default="7 August 2026, 13:00-15:30 CEST · online")
+    ap.add_argument(
+        "--out", type=Path, default=Path("Arctic_Radioisotopes_FAIR2Adapt.pptx")
+    )
+    ap.add_argument(
+        "--template",
+        type=Path,
+        default=None,
+        help="FAIR2Adapt .pptx template (or set $F2A_TEMPLATE)",
+    )
+    args = ap.parse_args()
+    if args.template:
+        globals()["TEMPLATE"] = args.template
+    if not TEMPLATE.exists():
+        raise SystemExit(
+            f"template not found: {TEMPLATE}\nPass --template or set $F2A_TEMPLATE."
+        )
+    build(args.author, args.meeting, args.out)
+
+
+if __name__ == "__main__":
+    main()
